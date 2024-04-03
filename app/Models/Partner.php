@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Models;
 
@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Partner extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'nome', 'type', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf',
+    ];
 }

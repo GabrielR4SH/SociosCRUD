@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('socios', function (Blueprint $table) {
+        Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->enum('tipo', ['silver', 'gold']);
+            $table->enum('type', ['silver', 'gold']);
             $table->string('cep');
             $table->string('logradouro')->nullable();
             $table->string('complemento')->nullable();

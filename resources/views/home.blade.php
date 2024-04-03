@@ -15,6 +15,10 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    @if(isset($partners))
+                        <pre>{{ json_encode($partners) }}</pre>
+                    @endif
                 </div>
             </div>
         </div>

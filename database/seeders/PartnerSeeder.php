@@ -36,7 +36,7 @@ class PartnerSeeder extends Seeder
             ],
             [
                 'nome' => 'Beltrano',
-                'type' => 'gold',
+                'type' => 'gold ',
                 'cep' => '98765-432',
                 'logradouro' => 'Praça Modelo',
                 'complemento' => 'SALA 3',

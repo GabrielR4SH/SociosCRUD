@@ -14,3 +14,5 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\PartnerController::class, 'index'])->name('home');
 
+//post
+Route::post('/partners', [App\Http\Controllers\PartnerController::class, 'store'])->name('partner.store');

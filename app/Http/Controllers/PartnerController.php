@@ -50,7 +50,32 @@ class PartnerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validação dos dados do formulário
+        $validatedData = $request->validate([
+            'nome' => 'required|string|max:255',
+            'type' => 'required|in:silver,gold',
+            'cep' => 'required|string|max:255',
+            'logradouro' => 'nullable|string|max:255',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'nullable|string|max:255',
+            'localidade' => 'nullable|string|max:255',
+            'uf' => 'nullable|string|max:255',
+        ]);
+
+        // Criação do novo registro de Partner
+        $partner = new Partner();
+        $partner->nome = $validatedData['nome'];
+        $partner->type = $validatedData['type'];
+        $partner->cep = $validatedData['cep'];
+        $partner->logradouro = $validatedData['logradouro'];
+        $partner->complemento = $validatedData['complemento'];
+        $partner->bairro = $validatedData['bairro'];
+        $partner->localidade = $validatedData['localidade'];
+        $partner->uf = $validatedData['uf'];
+        $partner->save();
+
+        // Redirecionamento ou resposta adequada após a criação
+        return redirect()->route('home')->with('status', 'Partner created successfully!');
     }
 
     /**

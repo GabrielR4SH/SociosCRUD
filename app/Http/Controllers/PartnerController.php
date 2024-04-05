@@ -18,6 +18,7 @@ class PartnerController extends Controller
         $userType = $user->type;
 
         if ($userType === 'silver') {
+            //dd($user);
             $partners = Partner::where('type', 'silver')->get();
         } elseif ($userType === 'gold') {
             $partners = Partner::all();
@@ -25,6 +26,7 @@ class PartnerController extends Controller
 
         return view('home', compact('partners'));
     }
+
 
     public function create()
     {
@@ -58,14 +60,12 @@ class PartnerController extends Controller
         }
     }
 
-
-
     public function edit($id)
     {
         $partner = Partner::findOrFail($id);
         return response()->json($partner);
     }
-    
+
     public function update(Request $request, $id)
     {
         $partner = Partner::findOrFail($id);

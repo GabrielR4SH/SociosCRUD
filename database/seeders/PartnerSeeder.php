@@ -24,7 +24,7 @@ class PartnerSeeder extends Seeder
             ],
             [
                 'nome' => 'Ciclano',
-                'type' => 'gold',
+                'type' => 'silver',
                 'cep' => '54321-876',
                 'logradouro' => 'Avenida Teste',
                 'complemento' => 'CASA 2',

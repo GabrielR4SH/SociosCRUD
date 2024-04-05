@@ -1,12 +1,20 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Services\PartnerService;
 use Illuminate\Http\Request;
-use App\Models\Partner;
 use Illuminate\Support\Facades\Auth;
 
 class PartnerController extends Controller
 {
+    protected $partnerService;
+
+    public function __construct(PartnerService $partnerService)
+    {
+        $this->partnerService = $partnerService;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -18,19 +26,12 @@ class PartnerController extends Controller
         $userType = $user->type;
 
         if ($userType === 'silver') {
-            //dd($user);
-            $partners = Partner::where('type', 'silver')->get();
+            $partners = $this->partnerService->getSilverPartners();
         } elseif ($userType === 'gold') {
-            $partners = Partner::all();
+            $partners = $this->partnerService->getAllPartners();
         }
 
         return view('home', compact('partners'));
-    }
-
-
-    public function create()
-    {
-        //
     }
 
     public function store(Request $request)
@@ -49,42 +50,42 @@ class PartnerController extends Controller
             $type = $request->input('type', 'silver');
             $validatedData['type'] = $type;
 
-            $partner = new Partner();
-            $partner->fill($validatedData);
-            $partner->save();
+            $this->partnerService->createPartner($validatedData);
 
             return redirect()->route('home')->with('status', 'Partner created successfully!');
         } catch (\Exception $e) {
-            // Exibir mensagem de erro ou logar o erro para investigação
-            dd($e->getMessage());
+            return $e->getMessage();
         }
     }
 
     public function edit($id)
     {
-        $partner = Partner::findOrFail($id);
+        $partner = $this->partnerService->findPartnerById($id);
         return response()->json($partner);
     }
 
     public function update(Request $request, $id)
     {
-        $partner = Partner::findOrFail($id);
-        $partner->update($request->all());
+        $validatedData = $request->validate([
+            'nome' => 'required|string|max:255',
+            'cep' => 'required|string|max:255',
+            'logradouro' => 'nullable|string|max:255',
+            'complemento' => 'nullable|string|max:255',
+            'bairro' => 'nullable|string|max:255',
+            'localidade' => 'nullable|string|max:255',
+            'uf' => 'nullable|string|max:255',
+        ]);
+
+        $this->partnerService->updatePartner($id, $validatedData);
+
         return redirect()->route('home')->with('status', 'Partner updated successfully!');
     }
 
     public function destroy($id)
     {
-        $partner = Partner::findOrFail($id);
-        $partner->delete();
-        return redirect()->route('home')->with('status', 'Partner deleted successfully!');
-    }
+        $this->partnerService->deletePartner($id);
 
-    public function deletePartner($id)
-    {
-        $partner = Partner::find($id);
-        $partner->delete();
-        return response()->json(['message' => 'Partner deleted successfully']);
+        return redirect()->route('home')->with('status', 'Partner deleted successfully!');
     }
 
 }

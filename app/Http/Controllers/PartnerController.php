@@ -1,23 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Partner;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class PartnerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index()
     {
         $user = Auth::user();
 
         if (!$user) {
-            // Usuário não autenticado, redirecione para a página de login ou faça o que for adequado
             return redirect()->route('login');
         }
 
@@ -29,31 +23,19 @@ class PartnerController extends Controller
             $partners = Partner::all();
         }
 
-        if ($request->wantsJson()) {
-            return response()->json(['partners' => $partners]);
-        }
-
         return view('home', compact('partners'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
-    {
-        // Validação dos dados do formulário
+{
+    try {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'type' => 'required|in:silver,gold',
             'cep' => 'required|string|max:255',
             'logradouro' => 'nullable|string|max:255',
             'complemento' => 'nullable|string|max:255',
@@ -62,51 +44,39 @@ class PartnerController extends Controller
             'uf' => 'nullable|string|max:255',
         ]);
 
-        // Criação do novo registro de Partner
+        $type = $request->input('type', 'silver');
+        $validatedData['type'] = $type;
+
         $partner = new Partner();
-        $partner->nome = $validatedData['nome'];
-        $partner->type = $validatedData['type'];
-        $partner->cep = $validatedData['cep'];
-        $partner->logradouro = $validatedData['logradouro'];
-        $partner->complemento = $validatedData['complemento'];
-        $partner->bairro = $validatedData['bairro'];
-        $partner->localidade = $validatedData['localidade'];
-        $partner->uf = $validatedData['uf'];
+        $partner->fill($validatedData);
         $partner->save();
 
-        // Redirecionamento ou resposta adequada após a criação
         return redirect()->route('home')->with('status', 'Partner created successfully!');
+    } catch (\Exception $e) {
+        // Exibir mensagem de erro ou logar o erro para investigação
+        dd($e->getMessage());
+    }
+}
+
+    
+
+    public function edit($id)
+    {
+        $partner = Partner::findOrFail($id);
+        return view('edit', compact('partner'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $partner = Partner::findOrFail($id);
+        $partner->update($request->all());
+        return redirect()->route('home')->with('status', 'Partner updated successfully!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $partner = Partner::findOrFail($id);
+        $partner->delete();
+        return redirect()->route('home')->with('status', 'Partner deleted successfully!');
     }
 }

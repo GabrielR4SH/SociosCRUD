@@ -39,10 +39,10 @@ app.component('example-component', ExampleComponent);
 app.mount('#app');
 
 // Certifique-se de que o jQuery está carregado antes de usar $.inputmask
+
 $(document).ready(function() {
     // Máscara para o campo CEP
     $('#cep').inputmask('99999-999');
-
 
     // Evento de clique no botão de pesquisa do CEP
     $('#searchCepBtn').click(function() {
@@ -69,6 +69,18 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Abre o modal de edição do parceiro
+    $('.edit-partner').click(function() {
+        let partnerId = $(this).data('id');
+        // Lógica para abrir o modal de edição com o ID do parceiro
+        $('#editPartnerModal').modal('show');
+    });
+
+    // Abre o modal de exclusão do parceiro
+    $('.delete-partner').click(function() {
+        let partnerId = $(this).data('id');
+        // Lógica para abrir o modal de exclusão com o ID do parceiro
+        $('#deletePartnerModal').modal('show');
+    });
 });
-
-

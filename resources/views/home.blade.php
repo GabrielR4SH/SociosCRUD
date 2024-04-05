@@ -76,7 +76,7 @@
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="cep" name="cep" placeholder="CEP: 05822-010" required>
                         <button type="button" class="btn btn-outline-secondary" id="searchCepBtn">
-                            <i class="fas fa-hourglass-half"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
                     <div class="mb-3">
@@ -105,42 +105,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.5/jquery.inputmask.min.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-<script>
-    // Máscara para o campo CEP
-    $('#cep').inputmask('99999-999');
-
-    document.getElementById('searchCepBtn').addEventListener('click', function () {
-        let cep = document.getElementById('cep').value.replace(/\D/g, '');
-
-        if (cep.length != 8) {
-            return;
-        }
-
-        fetch(`https://viacep.com.br/ws/${cep}/json/`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('logradouro').value = data.logradouro || '';
-                document.getElementById('complemento').value = data.complemento || '';
-                document.getElementById('bairro').value = data.bairro || '';
-                document.getElementById('localidade').value = data.localidade || '';
-                document.getElementById('uf').value = data.uf || '';
-            })
-            .catch(error => console.error('Erro:', error));
-    });
-
-    document.getElementById('addPartnerForm').addEventListener('submit', function (event) {
-        let userType = '{{ Auth::user()->type }}';
-
-        if (userType === 'silver' && document.getElementById('type')) {
-            event.preventDefault();
-            alert('Silver users cannot add gold partners.');
-        }
-    });
-</script>
 @endsection

@@ -38,12 +38,38 @@ app.component('example-component', ExampleComponent);
 
 app.mount('#app');
 
-// Certifique-se de que o jQuery está carregado antes de usar $.inputmask
+
 $(document).ready(function() {
     // Máscara para o campo CEP
+    $('#cep').inputmask('99999-999');
     $('#edit-cep').inputmask('99999-999');
 
-    // Evento de clique no botão de pesquisa do CEP
+    // Evento de clique no botão de pesquisa do CEP no modal de criação
+    $('#searchCepBtn').click(function() {
+        let cep = $('#cep').val().replace(/\D/g, '');
+
+        if (cep.length != 8) {
+            return;
+        }
+
+        // Requisição para a API do ViaCEP
+        $.ajax({
+            url: 'https://viacep.com.br/ws/' + cep + '/json/',
+            type: 'GET',
+            success: function(data) {
+                // Preencher os campos com os dados retornados
+                $('#logradouro').val(data.logradouro || '');
+                $('#bairro').val(data.bairro || '');
+                $('#localidade').val(data.localidade || '');
+                $('#uf').val(data.uf || '');
+            },
+            error: function() {
+                alert('Erro ao buscar CEP. Por favor, tente novamente.');
+            }
+        });
+    });
+
+    // Evento de clique no botão de pesquisa do CEP no modal de edição
     $('#editSearchCepBtn').click(function() {
         let cep = $('#edit-cep').val().replace(/\D/g, '');
 
@@ -114,3 +140,7 @@ $(document).ready(function() {
         });
     });
 });
+
+
+   
+

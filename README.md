@@ -30,3 +30,8 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 
 ## O projeto
 ![lsllss](https://github.com/GabrielR4SH/SociosCrud/assets/59832080/dc78f949-d079-44c6-a7ab-d69b6b815d8e)
+
+<hr>
+
+- Quando o projeto estiver rodando você deve clickar em login ou em registrar no campo superior direito
+- email: test@example.com password: 123pass <- Esse é um usuario tipo Gold que você pode fazer pra testar

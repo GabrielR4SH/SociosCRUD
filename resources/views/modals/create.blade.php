@@ -12,6 +12,7 @@
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" name="nome" required>
                     </div>
+                    @if(isset($partner))
                     @if (Auth::user()->type === 'gold')
                                 <div class="mb-3">
                                     <label for="edit-type" class="form-label">Type</label>
@@ -20,6 +21,7 @@
                                         <option value="gold" {{ $partner->type === 'gold' ? 'selected' : '' }}>Gold</option>
                                     </select>
                                 </div>
+                            @endif
                             @endif
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" id="cep" name="cep"

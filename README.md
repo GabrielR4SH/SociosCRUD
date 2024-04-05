@@ -22,9 +22,9 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
 ## Como rodar o projeto
-- Configure seu .ENV para conexão com o banco
-- abra outro terminal no diretorio do projeto e digite:`composer install`
-- abra um terminal no diretorio do projeto digite: `npm install && npm run dev`
+- Configure seu .ENV para conexão com o banco [.ENV.example]
+- abra um terminal no diretorio do projeto e digite:`composer install`
+- abra outro terminal no diretorio do projeto digite: `npm install && npm run dev`
 - Rode o comando das migrações junto com o Seeder: `php artisan migrate --seed` (Caso não queira enviar os Seeders digite apenas `php artisan migrate`)
 - php artisan test para rodar os testes unitarios do projeto (Fiz testes de autenticação e de recebimento de socios silvers apenas para usuarios silvers)
 

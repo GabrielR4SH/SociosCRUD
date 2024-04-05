@@ -80,12 +80,6 @@ class PartnerController extends Controller
         return redirect()->route('home')->with('status', 'Partner deleted successfully!');
     }
 
-    public function getPartnerDetails($id)
-    {
-        $partner = Partner::find($id);
-        return response()->json($partner);
-    }
-
     public function deletePartner($id)
     {
         $partner = Partner::find($id);

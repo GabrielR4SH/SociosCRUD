@@ -39,13 +39,13 @@ app.component('example-component', ExampleComponent);
 app.mount('#app');
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Máscara para o campo CEP
     $('#cep').inputmask('99999-999');
     $('#edit-cep').inputmask('99999-999');
 
-    // Evento de clique no botão de pesquisa do CEP no modal de criação
-    $('#searchCepBtn').click(function() {
+    // Evento de clique no botão de pesquisa do CEP 
+    $('#searchCepBtn').click(function () {
         let cep = $('#cep').val().replace(/\D/g, '');
 
         if (cep.length != 8) {
@@ -56,21 +56,21 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://viacep.com.br/ws/' + cep + '/json/',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 // Preencher os campos com os dados retornados
                 $('#logradouro').val(data.logradouro || '');
                 $('#bairro').val(data.bairro || '');
                 $('#localidade').val(data.localidade || '');
                 $('#uf').val(data.uf || '');
             },
-            error: function() {
+            error: function () {
                 alert('Erro ao buscar CEP. Por favor, tente novamente.');
             }
         });
     });
 
     // Evento de clique no botão de pesquisa do CEP no modal de edição
-    $('#editSearchCepBtn').click(function() {
+    $('#editSearchCepBtn').click(function () {
         let cep = $('#edit-cep').val().replace(/\D/g, '');
 
         if (cep.length != 8) {
@@ -81,7 +81,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'https://viacep.com.br/ws/' + cep + '/json/',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 // Preencher os campos com os dados retornados
                 $('#edit-logradouro').val(data.logradouro || '');
                 $('#edit-complemento').val(data.complemento || '');
@@ -89,19 +89,19 @@ $(document).ready(function() {
                 $('#edit-localidade').val(data.localidade || '');
                 $('#edit-uf').val(data.uf || '');
             },
-            error: function() {
+            error: function () {
                 alert('Erro ao buscar CEP. Por favor, tente novamente.');
             }
         });
     });
 
-    // Abre o modal de edição do parceiro
-    $('.edit-partner').click(function() {
+    // Abre o modal de edição
+    $('.edit-partner').click(function () {
         let partnerId = $(this).data('id');
         $.ajax({
             url: 'partners/' + partnerId + '/edit',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 // Preencher os campos do modal com os dados do parceiro
                 $('#edit-partner-id').val(data.id);
                 $('#edit-name').val(data.nome);
@@ -117,30 +117,43 @@ $(document).ready(function() {
                 // Exibir o modal de edição
                 $('#editPartnerModal').modal('show');
             },
-            error: function() {
+            error: function () {
                 alert('Erro ao carregar dados do parceiro. Por favor, tente novamente.');
             }
         });
     });
 
-    // Exclui o parceiro
-    $('.delete-partner').click(function() {
+    $('.delete-partner').click(function () {
+        let partnerId = $(this).data('id');
+        console.log('Partner ID:', partnerId);
+        $('#confirmDeleteBtn').data('id', partnerId); 
+        $('#deletePartnerModal').modal('show'); 
+    });
+
+    // Confirma a exclusão do parceiro
+    $('#deletePartnerModal').on('click', '#confirmDeleteBtn', function () {
         let partnerId = $(this).data('id');
         $.ajax({
-            url: 'partners/' + partnerId,
+            url: '/partners/' + partnerId,
             type: 'DELETE',
-            success: function() {
-                alert('Parceiro excluído com sucesso');
-                // Atualize a tabela de parceiros
-                location.reload();
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function() {
-                alert('Erro ao excluir parceiro. Por favor, tente novamente.');
+            complete: function () {
+                $('#deletePartnerModal').modal('hide'); 
+                location.reload(); 
             }
         });
     });
+
+
 });
 
 
-   
+
+
+
+
+
+
 

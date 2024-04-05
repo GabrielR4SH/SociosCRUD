@@ -19,3 +19,4 @@ Route::post('/partners', [PartnerController::class, 'store'])->name('partner.sto
 Route::get('/partners/{id}/edit', [PartnerController::class, 'edit'])->name('partner.edit');
 Route::put('/partners/{id}', [PartnerController::class, 'update'])->name('partner.update');
 Route::delete('/partners/{id}', [PartnerController::class, 'destroy'])->name('partner.destroy');
+

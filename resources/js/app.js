@@ -40,69 +40,47 @@ app.mount('#app');
 
 
 $(document).ready(function () {
-    // Máscara para o campo CEP
+
+    function fillAddressFields(cepField, logradouroField, complementoField, bairroField, localidadeField, ufField) {
+        let cep = cepField.val().replace(/\D/g, '');
+
+        if (cep.length != 8) {
+            return;
+        }
+
+        $.ajax({
+            url: 'https://viacep.com.br/ws/' + cep + '/json/',
+            type: 'GET',
+            success: function (data) {
+                logradouroField.val(data.logradouro || '');
+                complementoField.val(data.complemento || '');
+                bairroField.val(data.bairro || '');
+                localidadeField.val(data.localidade || '');
+                ufField.val(data.uf || '');
+            },
+            error: function () {
+                alert('Erro ao buscar CEP. Por favor, tente novamente.');
+            }
+        });
+    }
+
     $('#cep').inputmask('99999-999');
     $('#edit-cep').inputmask('99999-999');
 
-    // Evento de clique no botão de pesquisa do CEP 
     $('#searchCepBtn').click(function () {
-        let cep = $('#cep').val().replace(/\D/g, '');
-
-        if (cep.length != 8) {
-            return;
-        }
-
-        // Requisição para a API do ViaCEP
-        $.ajax({
-            url: 'https://viacep.com.br/ws/' + cep + '/json/',
-            type: 'GET',
-            success: function (data) {
-                // Preencher os campos com os dados retornados
-                $('#logradouro').val(data.logradouro || '');
-                $('#bairro').val(data.bairro || '');
-                $('#localidade').val(data.localidade || '');
-                $('#uf').val(data.uf || '');
-            },
-            error: function () {
-                alert('Erro ao buscar CEP. Por favor, tente novamente.');
-            }
-        });
+        fillAddressFields($('#cep'), $('#logradouro'), $('#complemento'), $('#bairro'), $('#localidade'), $('#uf'));
     });
 
-    // Evento de clique no botão de pesquisa do CEP no modal de edição
     $('#editSearchCepBtn').click(function () {
-        let cep = $('#edit-cep').val().replace(/\D/g, '');
-
-        if (cep.length != 8) {
-            return;
-        }
-
-        // Requisição para a API do ViaCEP
-        $.ajax({
-            url: 'https://viacep.com.br/ws/' + cep + '/json/',
-            type: 'GET',
-            success: function (data) {
-                // Preencher os campos com os dados retornados
-                $('#edit-logradouro').val(data.logradouro || '');
-                $('#edit-complemento').val(data.complemento || '');
-                $('#edit-bairro').val(data.bairro || '');
-                $('#edit-localidade').val(data.localidade || '');
-                $('#edit-uf').val(data.uf || '');
-            },
-            error: function () {
-                alert('Erro ao buscar CEP. Por favor, tente novamente.');
-            }
-        });
+        fillAddressFields($('#edit-cep'), $('#edit-logradouro'), $('#edit-complemento'), $('#edit-bairro'), $('#edit-localidade'), $('#edit-uf'));
     });
 
-    // Abre o modal de edição
     $('.edit-partner').click(function () {
         let partnerId = $(this).data('id');
         $.ajax({
             url: 'partners/' + partnerId + '/edit',
             type: 'GET',
             success: function (data) {
-                // Preencher os campos do modal com os dados do parceiro
                 $('#edit-partner-id').val(data.id);
                 $('#edit-name').val(data.nome);
                 $('#edit-type').val(data.type);
@@ -112,25 +90,22 @@ $(document).ready(function () {
                 $('#edit-bairro').val(data.bairro);
                 $('#edit-localidade').val(data.localidade);
                 $('#edit-uf').val(data.uf);
-                // Atualizar a action do formulário de edição com o ID do parceiro
                 $('#editPartnerForm').attr('action', 'partners/' + partnerId);
-                // Exibir o modal de edição
                 $('#editPartnerModal').modal('show');
             },
             error: function () {
                 alert('Erro ao carregar dados do parceiro. Por favor, tente novamente.');
             }
         });
+        
     });
 
     $('.delete-partner').click(function () {
         let partnerId = $(this).data('id');
-        console.log('Partner ID:', partnerId);
         $('#confirmDeleteBtn').data('id', partnerId); 
         $('#deletePartnerModal').modal('show'); 
     });
 
-    // Confirma a exclusão do parceiro
     $('#deletePartnerModal').on('click', '#confirmDeleteBtn', function () {
         let partnerId = $(this).data('id');
         $.ajax({
@@ -145,10 +120,7 @@ $(document).ready(function () {
             }
         });
     });
-
-
 });
-
 
 
 

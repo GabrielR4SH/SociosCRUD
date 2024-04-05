@@ -65,21 +65,26 @@ class PartnerController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'nome' => 'required|string|max:255',
-            'cep' => 'required|string|max:255',
-            'logradouro' => 'nullable|string|max:255',
-            'complemento' => 'nullable|string|max:255',
-            'bairro' => 'nullable|string|max:255',
-            'localidade' => 'nullable|string|max:255',
-            'uf' => 'nullable|string|max:255',
-        ]);
+{
+    $validatedData = $request->validate([
+        'nome' => 'required|string|max:255',
+        'cep' => 'required|string|max:255',
+        'logradouro' => 'nullable|string|max:255',
+        'complemento' => 'nullable|string|max:255',
+        'bairro' => 'nullable|string|max:255',
+        'localidade' => 'nullable|string|max:255',
+        'uf' => 'nullable|string|max:255',
+        'type' => 'nullable|string|in:silver,gold', // Validar o campo type
+    ]);
 
-        $this->partnerService->updatePartner($id, $validatedData);
+    $type = $request->input('type', 'silver');
+    $validatedData['type'] = $type;
 
-        return redirect()->route('home')->with('status', 'Partner updated successfully!');
-    }
+    $this->partnerService->updatePartner($id, $validatedData);
+
+    return redirect()->route('home')->with('status', 'Partner updated successfully!');
+}
+
 
     public function destroy($id)
     {

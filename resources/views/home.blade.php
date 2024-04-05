@@ -70,13 +70,12 @@
         </div>
     </div>
 
-    <!-- Modal Create-->
-    @extends('modals.create');
+     <!-- Modal Create-->
+     @include('modals.create')
 
-    <!-- Modal Edit-->
-    @extends('modals.edit')
-
-
-    <!-- Delete Partner Modal -->
-    @extends('modals.delete');
+     <!-- Modal Edit-->
+     @include('modals.edit')
+ 
+     <!-- Delete Partner Modal -->
+     @include('modals.delete')
 @endsection

@@ -7,13 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Autenticação
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-
+//CRUD 
 Route::get('/home', [PartnerController::class, 'index'])->name('home');
 Route::post('/partners', [PartnerController::class, 'store'])->name('partner.store');
 Route::get('/partners/{id}/edit', [PartnerController::class, 'edit'])->name('partner.edit');

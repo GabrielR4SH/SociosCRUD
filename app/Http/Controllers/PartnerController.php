@@ -32,40 +32,40 @@ class PartnerController extends Controller
     }
 
     public function store(Request $request)
-{
-    try {
-        $validatedData = $request->validate([
-            'nome' => 'required|string|max:255',
-            'cep' => 'required|string|max:255',
-            'logradouro' => 'nullable|string|max:255',
-            'complemento' => 'nullable|string|max:255',
-            'bairro' => 'nullable|string|max:255',
-            'localidade' => 'nullable|string|max:255',
-            'uf' => 'nullable|string|max:255',
-        ]);
+    {
+        try {
+            $validatedData = $request->validate([
+                'nome' => 'required|string|max:255',
+                'cep' => 'required|string|max:255',
+                'logradouro' => 'nullable|string|max:255',
+                'complemento' => 'nullable|string|max:255',
+                'bairro' => 'nullable|string|max:255',
+                'localidade' => 'nullable|string|max:255',
+                'uf' => 'nullable|string|max:255',
+            ]);
 
-        $type = $request->input('type', 'silver');
-        $validatedData['type'] = $type;
+            $type = $request->input('type', 'silver');
+            $validatedData['type'] = $type;
 
-        $partner = new Partner();
-        $partner->fill($validatedData);
-        $partner->save();
+            $partner = new Partner();
+            $partner->fill($validatedData);
+            $partner->save();
 
-        return redirect()->route('home')->with('status', 'Partner created successfully!');
-    } catch (\Exception $e) {
-        // Exibir mensagem de erro ou logar o erro para investigação
-        dd($e->getMessage());
+            return redirect()->route('home')->with('status', 'Partner created successfully!');
+        } catch (\Exception $e) {
+            // Exibir mensagem de erro ou logar o erro para investigação
+            dd($e->getMessage());
+        }
     }
-}
 
-    
+
 
     public function edit($id)
     {
         $partner = Partner::findOrFail($id);
-        return view('edit', compact('partner'));
+        return response()->json($partner);
     }
-
+    
     public function update(Request $request, $id)
     {
         $partner = Partner::findOrFail($id);
@@ -79,4 +79,18 @@ class PartnerController extends Controller
         $partner->delete();
         return redirect()->route('home')->with('status', 'Partner deleted successfully!');
     }
+
+    public function getPartnerDetails($id)
+    {
+        $partner = Partner::find($id);
+        return response()->json($partner);
+    }
+
+    public function deletePartner($id)
+    {
+        $partner = Partner::find($id);
+        $partner->delete();
+        return response()->json(['message' => 'Partner deleted successfully']);
+    }
+
 }

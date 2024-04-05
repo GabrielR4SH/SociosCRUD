@@ -39,14 +39,13 @@ app.component('example-component', ExampleComponent);
 app.mount('#app');
 
 // Certifique-se de que o jQuery está carregado antes de usar $.inputmask
-
 $(document).ready(function() {
     // Máscara para o campo CEP
-    $('#cep').inputmask('99999-999');
+    $('#edit-cep').inputmask('99999-999');
 
     // Evento de clique no botão de pesquisa do CEP
-    $('#searchCepBtn').click(function() {
-        let cep = $('#cep').val().replace(/\D/g, '');
+    $('#editSearchCepBtn').click(function() {
+        let cep = $('#edit-cep').val().replace(/\D/g, '');
 
         if (cep.length != 8) {
             return;
@@ -58,11 +57,11 @@ $(document).ready(function() {
             type: 'GET',
             success: function(data) {
                 // Preencher os campos com os dados retornados
-                $('#logradouro').val(data.logradouro || '');
-                $('#complemento').val(data.complemento || '');
-                $('#bairro').val(data.bairro || '');
-                $('#localidade').val(data.localidade || '');
-                $('#uf').val(data.uf || '');
+                $('#edit-logradouro').val(data.logradouro || '');
+                $('#edit-complemento').val(data.complemento || '');
+                $('#edit-bairro').val(data.bairro || '');
+                $('#edit-localidade').val(data.localidade || '');
+                $('#edit-uf').val(data.uf || '');
             },
             error: function() {
                 alert('Erro ao buscar CEP. Por favor, tente novamente.');
@@ -73,14 +72,45 @@ $(document).ready(function() {
     // Abre o modal de edição do parceiro
     $('.edit-partner').click(function() {
         let partnerId = $(this).data('id');
-        // Lógica para abrir o modal de edição com o ID do parceiro
-        $('#editPartnerModal').modal('show');
+        $.ajax({
+            url: 'partners/' + partnerId + '/edit',
+            type: 'GET',
+            success: function(data) {
+                // Preencher os campos do modal com os dados do parceiro
+                $('#edit-partner-id').val(data.id);
+                $('#edit-name').val(data.nome);
+                $('#edit-type').val(data.type);
+                $('#edit-cep').val(data.cep);
+                $('#edit-logradouro').val(data.logradouro);
+                $('#edit-complemento').val(data.complemento);
+                $('#edit-bairro').val(data.bairro);
+                $('#edit-localidade').val(data.localidade);
+                $('#edit-uf').val(data.uf);
+                // Atualizar a action do formulário de edição com o ID do parceiro
+                $('#editPartnerForm').attr('action', 'partners/' + partnerId);
+                // Exibir o modal de edição
+                $('#editPartnerModal').modal('show');
+            },
+            error: function() {
+                alert('Erro ao carregar dados do parceiro. Por favor, tente novamente.');
+            }
+        });
     });
 
-    // Abre o modal de exclusão do parceiro
+    // Exclui o parceiro
     $('.delete-partner').click(function() {
         let partnerId = $(this).data('id');
-        // Lógica para abrir o modal de exclusão com o ID do parceiro
-        $('#deletePartnerModal').modal('show');
+        $.ajax({
+            url: 'partners/' + partnerId,
+            type: 'DELETE',
+            success: function() {
+                alert('Parceiro excluído com sucesso');
+                // Atualize a tabela de parceiros
+                location.reload();
+            },
+            error: function() {
+                alert('Erro ao excluir parceiro. Por favor, tente novamente.');
+            }
+        });
     });
 });
